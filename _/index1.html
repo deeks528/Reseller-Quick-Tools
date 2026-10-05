@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reseller Tools</title>
+  <style>
+    :root {
+      --green: #0b5d4d;
+      --green-dark: #084b3f;
+      --cream: #fbf8ef;
+      --gold: #c99a3b;
+      --text: #18342d;
+      --muted: #72807b;
+      --line: #e8e2d3;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: linear-gradient(145deg, var(--cream), #fff 55%, #f5f1e8);
+    }
+
+    .wrap {
+      width: min(920px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 56px 0 40px;
+    }
+
+    header {
+      margin-bottom: 34px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--green-dark);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.35rem, 7vw, 4rem);
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+
+    .subtitle {
+      max-width: 560px;
+      margin: 12px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: .98rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .9);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 14px 45px rgba(16, 50, 43, .07);
+    }
+
+    .icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: var(--green);
+      color: var(--white);
+      font-size: 21px;
+      margin-bottom: 17px;
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: var(--green-dark);
+    }
+
+    .card p {
+      margin: 8px 0 18px;
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.55;
+    }
+
+    .field {
+      margin: 0 0 10px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid #ddd8cb;
+      border-radius: 12px;
+      background: #fff;
+      color: var(--text);
+      padding: 11px 12px;
+      font: inherit;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 82px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(201, 154, 59, .1);
+    }
+
+    .actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin-top: 13px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 43px;
+      padding: 0 15px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      text-decoration: none;
+      font: inherit;
+      font-size: .88rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .primary {
+      background: var(--green);
+      color: white;
+    }
+
+    .secondary {
+      background: #f7f4eb;
+      border-color: var(--line);
+      color: var(--green-dark);
+    }
+
+    .hint {
+      margin-top: 10px;
+      font-size: .76rem;
+      color: #8a918d;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 28px;
+      color: #8b938f;
+      font-size: .76rem;
+    }
+
+    @media (max-width: 700px) {
+      .wrap {
+        padding-top: 36px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <header>
+      <p class="eyebrow">Reseller Hub</p>
+      <h1>Quick Tools</h1>
+      <p class="subtitle">Simple tools for managing customer addresses and payment links.</p>
+    </header>
+
+    <section class="grid">
+      <article class="card">
+        <div class="icon" aria-hidden="true">⌖</div>
+        <h2>Address Formatter</h2>
+        <p>Format a customer's address and quickly send the formatted message on WhatsApp.</p>
+
+        <div class="field">
+          <input id="recipientPhone" type="tel" inputmode="numeric" value="9999999999"
+            placeholder="Recipient phone number" />
+        </div>
+        <div class="field">
+          <textarea id="messageText" placeholder="Message to send">Please find the formatted address.</textarea>
+        </div>
+
+        <div class="actions">
+          <a class="btn primary" href="./address-formatter.html">Open Formatter</a>
+          <button class="btn secondary" type="button" id="sendBtn">Send on WhatsApp</button>
+        </div>
+        <div class="hint">The formatter opens with the phone number above. The Send button uses the nested WhatsApp URL
+          flow.</div>
+      </article>
+
+      <article class="card">
+        <div class="icon" aria-hidden="true">₹</div>
+        <h2>Payment</h2>
+        <p>Create a shareable payment link with the order amount, delivery address and UPI payment button.</p>
+
+        <div class="actions">
+          <a class="btn primary" href="./payment_link.html">Open Payment</a>
+        </div>
+        <div class="hint">Place <strong>payment_link.html</strong> in the same GitHub Pages folder as this page.</div>
+      </article>
+    </section>
+
+    <footer>Built for Reseller Hub</footer>
+  </main>
+
+  <script>
+    function encodedCode(value) {
+      return encodeURIComponent(value);
+    }
+
+    function openWhatsApp() {
+      const recipientPhone = document.getElementById('recipientPhone').value.replace(/\D/g, '');
+      const encodedText = encodedCode(document.getElementById('messageText').value);
+
+      if (!recipientPhone) {
+        alert('Enter a recipient phone number.');
+        return;
+      }
+
+      const nestedUrl = `https://api.whatsapp.com/send/?phone=${recipientPhone}&text=${encodedText}&type=phone_number&app_absent=0`;
+      const url = `https://api.whatsapp.com/send/?text=${encodedCode(nestedUrl)}`;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+
+    document.getElementById('sendBtn').addEventListener('click', openWhatsApp);
+  </script>
+</body>
+
+</html>
