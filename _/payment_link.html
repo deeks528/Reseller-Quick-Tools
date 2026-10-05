@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Link — UPI Pay</title>
+    <style>
+        :root {
+            --bg-page: #f3f4f6;
+            --bg-card: #ffffff;
+            --bg-subtle: #f8fafc;
+            --border-card: #e2e8f0;
+            --border-input: #cbd5e1;
+            --border-hover: #94a3b8;
+            --border-focus: #0f172a;
+
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --text-placeholder: #94a3b8;
+
+            --badge-bg: #f0fdf4;
+            --badge-text: #166534;
+            --badge-border: #bbf7d0;
+
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 16px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 15px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            max-width: 500px;
+            width: 100%;
+            padding: 36px 32px;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: var(--text-primary);
+            font-size: 26px;
+            margin-bottom: 6px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 13px;
+            border: 1px solid var(--border-input);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            outline: none;
+            box-shadow: var(--shadow-sm);
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-placeholder);
+        }
+
+        .form-group input:hover {
+            border-color: var(--border-hover);
+        }
+
+        .form-group input:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .char-counter {
+            font-size: 12px;
+            color: var(--text-muted);
+            float: right;
+            font-weight: 500;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px 18px;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--border-focus);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: #0f172a;
+            color: #ffffff;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            background: #000000;
+        }
+
+        .btn-whatsapp {
+            background: #16a34a;
+            color: #ffffff;
+        }
+
+        .btn-whatsapp:hover {
+            background: #15803d;
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-color: var(--border-input);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-subtle);
+            border-color: var(--border-hover);
+        }
+
+        .btn-pay {
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 16px;
+            padding: 14px 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-pay:hover {
+            background: #000000;
+        }
+
+        .required {
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        /* Result Card */
+        .result-box {
+            margin-top: 22px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            padding: 18px;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-tag {
+            display: inline-block;
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            border: 1px solid var(--badge-border);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .link-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .link-row input {
+            flex: 1;
+            padding: 9px 12px;
+            border: 1px solid var(--border-input);
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            outline: none;
+            box-shadow: var(--shadow-sm);
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .link-row input:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+        }
+
+        .link-row button {
+            width: auto;
+            padding: 9px 14px;
+            font-size: 13px;
+        }
+
+        /* Customer Payment View */
+        .pay-panel {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-card);
+            border-radius: 10px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .pay-panel .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .pay-amount {
+            font-size: clamp(2.4rem, 8vw, 3rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.04em;
+            margin-bottom: 8px;
+        }
+
+        .pay-item-wrap {
+            margin-bottom: 14px;
+        }
+
+        .pay-item-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            color: var(--text-secondary);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .pay-meta-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 6px;
+            padding: 12px 14px;
+            text-align: left;
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .pay-meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pay-meta-row span {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .pay-meta-row strong {
+            color: var(--text-primary);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 13px;
+        }
+
+        .expiry-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+            color: #92400e;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .expired-panel {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 10px;
+            padding: 22px 18px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .expired-icon {
+            font-size: 38px;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .expired-msg {
+            color: #9b2c2c;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(16px);
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .container {
+                padding: 24px 18px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Generator View -->
+        <section id="creatorView">
+            <div class="header">
+                <h1>Payment Link</h1>
+            </div>
+
+            <form id="paymentForm" onsubmit="event.preventDefault();">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="priceInput">Price (₹) <span class="required">*</span></label>
+                        <input type="number" id="priceInput" step="any" min="1" placeholder="e.g. 499" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="upiInput">UPI ID <span class="required">*</span></label>
+                        <input type="text" id="upiInput" placeholder="e.g. 9876543210@upi" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="upiNameInput">UPI Name / Payee Name</label>
+                        <input type="text" id="upiNameInput" maxlength="40" placeholder="e.g. Collections" />
+                        <div class="form-hint">Appears on customer's UPI app.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="validityInput">Validity</label>
+                        <div style="position: relative; display: flex; align-items: center;">
+                            <input type="number" id="validityInput" min="1" max="720" value="24" placeholder="24"
+                                style="padding-right: 42px;" />
+                            <span
+                                style="position: absolute; right: 12px; font-size: 13px; color: var(--text-muted); pointer-events: none; font-weight: 500;">hrs</span>
+                        </div>
+                        <div class="form-hint">Default 24 hrs</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="itemInput">
+                        Item Description (Optional)
+                        <span id="charCount" class="char-counter">0/30</span>
+                    </label>
+                    <input type="text" id="itemInput" maxlength="30" placeholder="e.g. Saree" />
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 6px;">
+                    <button type="submit" id="generateBtn" class="btn btn-primary" style="flex: 2;">
+                        <span>Generate Short Payment Link</span>
+                    </button>
+                    <button type="button" id="clearAutoFillBtn" class="btn btn-secondary" style="flex: 1;"
+                        title="Clear auto-filled UPI details">
+                        <span>Clear Auto-fill</span>
+                    </button>
+                </div>
+
+                <div id="resultBox" class="result-box hidden">
+                    <span id="resultTag" class="result-tag">Short Link Ready ✓ (Valid for 24h)</span>
+                    <div class="link-row">
+                        <input type="text" id="shortUrlOutput" readonly select-all />
+                        <button type="button" id="copyLinkBtn" class="btn btn-secondary">Copy</button>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; flex-direction: column;">
+                        <button type="button" id="whatsappShareBtn" class="btn btn-whatsapp">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.634.06-1.78-.415-1.464-.606-2.42-2.112-2.493-2.209-.072-.097-.597-.795-.597-1.516s.377-1.077.51-1.223c.143-.146.312-.183.416-.183.104 0 .208.002.299.006.096.004.225-.036.35.265.13.313.442 1.077.481 1.155.039.078.065.17.013.273-.052.104-.078.17-.156.26-.078.091-.164.204-.234.273-.078.078-.16.163-.069.319.091.156.403.665.865 1.076.595.53 1.096.694 1.252.772.156.078.247.065.338-.039.091-.104.39-.455.494-.61.104-.156.208-.13.35-.078.143.052.909.429 1.065.507.156.078.26.117.299.182.039.065.039.377-.105.782z" />
+                            </svg>
+                            <span>Share on WhatsApp</span>
+                        </button>
+
+                        <button type="button" id="previewLinkBtn" class="btn btn-secondary">
+                            Preview Customer Page
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- Customer Payment View -->
+        <section id="paymentView" class="hidden">
+            <div class="header">
+                <h1>Payment Details</h1>
+                <p>Confirm the order details below and tap the button to pay securely via UPI</p>
+            </div>
+
+            <div class="pay-panel">
+                <div class="label">Total Amount Due</div>
+                <div id="customerAmount" class="pay-amount">₹0.00</div>
+
+                <div id="customerExpiryPill" class="expiry-pill hidden">
+                    <span>⏱️ Valid for 24h</span>
+                </div>
+
+                <!-- Optional Item Display -->
+                <div id="customerItemWrap" class="pay-item-wrap hidden">
+                    <span class="pay-item-badge">
+                        <span>🏷️</span>
+                        <span id="customerItem">—</span>
+                    </span>
+                </div>
+
+                <!-- Payee Details -->
+                <div class="pay-meta-box">
+                    <div id="customerUpiNameWrap" class="pay-meta-row hidden">
+                        <span>Payee Name</span>
+                        <strong id="customerUpiName">—</strong>
+                    </div>
+                    <div class="pay-meta-row">
+                        <span>Payee UPI ID</span>
+                        <strong id="customerUpiId">—</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deeplink Button with Item as tn -->
+            <a id="upiDeepLinkBtn" href="#" class="btn btn-pay">
+                <span>Pay via UPI App</span>
+                <span>⚡</span>
+            </a>
+
+            <p class="pay-helper">
+                Tapping opens Google Pay, PhonePe, Paytm, or your default UPI app with the exact price, payee, and item
+                note pre-filled.
+            </p>
+        </section>
+
+        <!-- Expired Payment Link View -->
+        <section id="expiredView" class="hidden">
+            <div class="header">
+                <div class="expired-icon">⏳</div>
+                <h1>Payment Link Expired</h1>
+                <p>This payment link is no longer valid</p>
+            </div>
+
+            <div class="expired-panel">
+                <div class="expired-msg">
+                    Payment links automatically expire after <strong>24 hours</strong> for order validity and security.
+                </div>
+
+                <div class="pay-meta-box">
+                    <div class="pay-meta-row">
+                        <span>Original Amount</span>
+                        <strong id="expiredAmount">₹0.00</strong>
+                    </div>
+                    <div id="expiredItemWrap" class="pay-meta-row hidden">
+                        <span>Item</span>
+                        <strong id="expiredItem">—</strong>
+                    </div>
+                    <div id="expiredUpiNameWrap" class="pay-meta-row hidden">
+                        <span>Payee</span>
+                        <strong id="expiredUpiName">—</strong>
+                    </div>
+                    <div id="expiredDateWrap" class="pay-meta-row hidden">
+                        <span>Expired At</span>
+                        <strong id="expiredDate">—</strong>
+                    </div>
+                </div>
+            </div>
+
+            <p class="pay-helper" style="text-align: center;">
+                Please contact the seller to request a fresh payment link.
+            </p>
+        </section>
+
+    </div>
+
+    <div id="toast" class="toast">Link copied to clipboard!</div>
+
+    <script>
+        // Character counter for item input
+        const itemInput = document.getElementById('itemInput');
+        const charCount = document.getElementById('charCount');
+        itemInput.addEventListener('input', () => {
+            charCount.textContent = `${itemInput.value.length}/30`;
+        });
+
+        /**
+         * Compact Payload Encoder
+         * Encodes: price:upiId or price:upiId:item in base64url (stripping padding)
+         */
+        /**
+         * Compact Payload Encoder
+         * Encodes: price:upiId:exp:item in base64url (stripping padding)
+         * exp is epoch seconds encoded in base36
+         */
+        function encodePayment(price, upiId, item = '', expSec = null) {
+            const cleanUpi = upiId.trim();
+            const cleanItem = (item || '').trim().replace(/:/g, ' '); // avoid collision with delimiter
+            const expStr = expSec ? Number(expSec).toString(36) : '';
+
+            let raw;
+            if (expStr) {
+                raw = cleanItem ? `${price}:${cleanUpi}:${expStr}:${cleanItem}` : `${price}:${cleanUpi}:${expStr}`;
+            } else {
+                raw = cleanItem ? `${price}:${cleanUpi}::${cleanItem}` : `${price}:${cleanUpi}`;
+            }
+
+            const b64 = btoa(raw)
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=+$/, ''); // Strip padding for minimal length
+            return b64;
+        }
+
+        /**
+         * Payload & Query Parameter Decoder
+         * Reads:
+         * - #p=... or #... containing base64 payload
+         * - Query parameter pn=... (UPI Name) and exp=... from location.search or location.hash
+         */
+        function decodePayment() {
+            const hash = window.location.hash || '';
+            const search = window.location.search || '';
+
+            if (!hash && !search) return null;
+
+            // Extract UPI Name (pn) & optional exp from query string or hash query params
+            const searchParams = new URLSearchParams(search);
+            let upiName = searchParams.get('pn') || searchParams.get('name') || '';
+            let queryExp = searchParams.get('exp') || '';
+
+            // Also check if pn or exp is inside hash (e.g. #p=...&pn=...)
+            if (hash.includes('&')) {
+                const hashQuery = new URLSearchParams(hash.replace(/^[#?]/, ''));
+                if (!upiName) upiName = hashQuery.get('pn') || hashQuery.get('name') || '';
+                if (!queryExp) queryExp = hashQuery.get('exp') || '';
+            }
+
+            // 1. Support plain format: #am=499&pa=name@upi&tn=Saree
+            if (hash.includes('am=') && hash.includes('pa=')) {
+                const params = new URLSearchParams(hash.replace(/^[#?]/, ''));
+                let expiresAt = null;
+                const rawExp = params.get('exp') || queryExp;
+                if (rawExp) {
+                    const parsed = parseInt(rawExp, 36);
+                    if (!isNaN(parsed) && parsed > 1700000000 && parsed < 2500000000) {
+                        expiresAt = parsed * 1000;
+                    }
+                }
+                return {
+                    amount: Number(params.get('am')),
+                    upiId: params.get('pa'),
+                    item: params.get('tn') || '',
+                    upiName: upiName || params.get('pn') || '',
+                    expiresAt
+                };
+            }
+
+            // 2. Decode compact base64url payload
+            let token = hash.replace(/^[#?]/, '');
+            if (token.includes('&')) {
+                const hashParams = new URLSearchParams(token);
+                token = hashParams.get('p') || hashParams.get('payment') || token.split('&')[0];
+            } else {
+                token = token.replace(/^(?:p=|payment=)/, '');
+            }
+
+            if (!token) return null;
+
+            try {
+                const pad = token.length % 4 === 0 ? '' : '='.repeat(4 - (token.length % 4));
+                const b64 = (token + pad).replace(/-/g, '+').replace(/_/g, '/');
+                const raw = atob(b64);
+
+                // Legacy JSON support
+                if (raw.startsWith('{')) {
+                    const parsed = JSON.parse(raw);
+                    let expiresAt = null;
+                    if (parsed.exp) {
+                        expiresAt = parsed.exp > 1e11 ? parsed.exp : parsed.exp * 1000;
+                    }
+                    return {
+                        amount: Number(parsed.amount),
+                        upiId: parsed.upiId,
+                        item: parsed.order || parsed.item || '',
+                        upiName: upiName || parsed.business || '',
+                        expiresAt
+                    };
+                }
+
+                // Compact format:
+                // "amount:upiId"
+                // "amount:upiId:exp"
+                // "amount:upiId:item"
+                // "amount:upiId:exp:item"
+                const parts = raw.split(':');
+                if (parts.length >= 2 && !isNaN(parts[0])) {
+                    const amount = Number(parts[0]);
+                    const upiId = parts[1];
+                    let item = '';
+                    let expiresAt = null;
+
+                    if (parts.length === 3) {
+                        const parsedExp = parseInt(parts[2], 36);
+                        if (!isNaN(parsedExp) && parsedExp > 1700000000 && parsedExp < 2500000000) {
+                            expiresAt = parsedExp * 1000;
+                        } else {
+                            item = parts[2];
+                        }
+                    } else if (parts.length >= 4) {
+                        const parsedExp = parseInt(parts[2], 36);
+                        if (!isNaN(parsedExp) && parsedExp > 1700000000 && parsedExp < 2500000000) {
+                            expiresAt = parsedExp * 1000;
+                            item = parts.slice(3).join(':');
+                        } else {
+                            item = parts.slice(2).join(':');
+                        }
+                    }
+
+                    // Query param exp fallback if not in payload
+                    if (!expiresAt && queryExp) {
+                        const parsedExp = parseInt(queryExp, 36);
+                        if (!isNaN(parsedExp) && parsedExp > 1700000000 && parsedExp < 2500000000) {
+                            expiresAt = parsedExp * 1000;
+                        } else if (!isNaN(Number(queryExp))) {
+                            const num = Number(queryExp);
+                            expiresAt = num > 1e11 ? num : num * 1000;
+                        }
+                    }
+
+                    return { amount, upiId, item, upiName, expiresAt };
+                }
+            } catch (e) {
+                console.warn('Failed to decode compact payment token:', e);
+            }
+
+            return null;
+        }
+
+        function formatCurrency(val) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                maximumFractionDigits: 2
+            }).format(Number(val) || 0);
+        }
+
+        /**
+         * Standard UPI Deep Link Builder
+         * Includes item as transaction note (tn) and upiName as payee name (pn)
+         */
+        function buildUpiDeepLink(amount, upiId, upiName = '', item = '') {
+            const cleanAmount = Number(amount).toFixed(2);
+            const payeeName = (upiName || 'Merchant').trim();
+            const note = (item && item.trim()) ? item.trim() : 'Payment';
+
+            const params = new URLSearchParams({
+                pa: upiId.trim(),
+                pn: payeeName,
+                am: cleanAmount,
+                cu: 'INR',
+                tn: note
+            });
+
+            return `upi://pay?${params.toString()}`;
+        }
+
+        // DOM elements
+        const creatorView = document.getElementById('creatorView');
+        const paymentView = document.getElementById('paymentView');
+        const expiredView = document.getElementById('expiredView');
+        const priceInput = document.getElementById('priceInput');
+        const upiInput = document.getElementById('upiInput');
+        const upiNameInput = document.getElementById('upiNameInput');
+        const validityInput = document.getElementById('validityInput');
+        const generateBtn = document.getElementById('generateBtn');
+        const resultBox = document.getElementById('resultBox');
+        const resultTag = document.getElementById('resultTag');
+        const shortUrlOutput = document.getElementById('shortUrlOutput');
+        const copyLinkBtn = document.getElementById('copyLinkBtn');
+        const whatsappShareBtn = document.getElementById('whatsappShareBtn');
+        const previewLinkBtn = document.getElementById('previewLinkBtn');
+        const customerAmount = document.getElementById('customerAmount');
+        const customerExpiryPill = document.getElementById('customerExpiryPill');
+        const customerItemWrap = document.getElementById('customerItemWrap');
+        const customerItem = document.getElementById('customerItem');
+        const customerUpiNameWrap = document.getElementById('customerUpiNameWrap');
+        const customerUpiName = document.getElementById('customerUpiName');
+        const customerUpiId = document.getElementById('customerUpiId');
+        const upiDeepLinkBtn = document.getElementById('upiDeepLinkBtn');
+        const expiredAmount = document.getElementById('expiredAmount');
+        const expiredItemWrap = document.getElementById('expiredItemWrap');
+        const expiredItem = document.getElementById('expiredItem');
+        const expiredUpiNameWrap = document.getElementById('expiredUpiNameWrap');
+        const expiredUpiName = document.getElementById('expiredUpiName');
+        const expiredDateWrap = document.getElementById('expiredDateWrap');
+        const expiredDate = document.getElementById('expiredDate');
+        const toast = document.getElementById('toast');
+
+        let countdownTimer = null;
+
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+
+        let generatedUrl = '';
+        let generatedData = null;
+
+        // Auto-fill logic for UPI ID, Payee Name & Validity
+        function loadSavedPaymentProfile() {
+            try {
+                const savedUpi = localStorage.getItem('reseller_upi_id');
+                const savedName = localStorage.getItem('reseller_upi_name');
+                const savedValidity = localStorage.getItem('reseller_validity');
+
+                if (savedUpi && !upiInput.value) {
+                    upiInput.value = savedUpi;
+                }
+                if (savedName && !upiNameInput.value) {
+                    upiNameInput.value = savedName;
+                }
+                if (savedValidity && !isNaN(Number(savedValidity))) {
+                    validityInput.value = savedValidity;
+                } else if (!validityInput.value) {
+                    validityInput.value = '24';
+                }
+
+                // Also check if creator view was opened with parameters
+                const params = new URLSearchParams(window.location.search);
+                const queryUpi = params.get('pa') || params.get('upi');
+                const queryName = params.get('pn') || params.get('name');
+                if (queryUpi) upiInput.value = queryUpi;
+                if (queryName) upiNameInput.value = queryName;
+            } catch (err) {
+                console.warn('Error reading from localStorage:', err);
+            }
+        }
+
+        function savePaymentProfile() {
+            try {
+                const upi = upiInput.value.trim();
+                const name = upiNameInput.value.trim();
+                const valHours = Number(validityInput.value);
+
+                if (upi) {
+                    localStorage.setItem('reseller_upi_id', upi);
+                }
+                if (name) {
+                    localStorage.setItem('reseller_upi_name', name);
+                } else {
+                    localStorage.removeItem('reseller_upi_name');
+                }
+                if (valHours && valHours > 0) {
+                    localStorage.setItem('reseller_validity', valHours);
+                }
+            } catch (err) {
+                console.warn('Error saving to localStorage:', err);
+            }
+        }
+
+        upiInput.addEventListener('input', savePaymentProfile);
+        upiNameInput.addEventListener('input', savePaymentProfile);
+        validityInput.addEventListener('input', savePaymentProfile);
+
+        const clearAutoFillBtn = document.getElementById('clearAutoFillBtn');
+        if (clearAutoFillBtn) {
+            clearAutoFillBtn.addEventListener('click', () => {
+                localStorage.removeItem('reseller_upi_id');
+                localStorage.removeItem('reseller_upi_name');
+                localStorage.removeItem('reseller_validity');
+                upiInput.value = '';
+                upiNameInput.value = '';
+                validityInput.value = '24';
+                showToast('Auto-fill cache cleared ✓');
+            });
+        }
+
+        // Form submission: Generate Link with configurable validity (default 24h)
+        document.getElementById('paymentForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const price = Number(priceInput.value);
+            const upiId = upiInput.value.trim();
+            const upiName = upiNameInput.value.trim();
+            const item = itemInput.value.trim();
+            const validityHours = Math.max(1, Number(validityInput.value) || 24);
+
+            if (!price || price <= 0) {
+                alert('Please enter a valid price.');
+                priceInput.focus();
+                return;
+            }
+            if (!upiId) {
+                alert('Please enter a valid UPI ID.');
+                upiInput.focus();
+                return;
+            }
+
+            // Persist valid profile to localStorage
+            savePaymentProfile();
+
+            // Expiry timestamp in epoch seconds
+            const expiresAt = Date.now() + (validityHours * 60 * 60 * 1000);
+            const expSec = Math.floor(expiresAt / 1000);
+
+            // Compact Base64url payload with price, upiId, optional item, and expiry
+            const token = encodePayment(price, upiId, item, expSec);
+
+            // Build URL: base + query parameter pn + hash token p
+            const baseUrl = window.location.origin + window.location.pathname;
+            const urlObj = new URL(baseUrl);
+            if (upiName) {
+                urlObj.searchParams.set('pn', upiName);
+            }
+            urlObj.hash = `p=${token}`;
+            generatedUrl = urlObj.toString();
+            generatedData = { price, upiId, upiName, item, expiresAt, validityHours };
+
+            shortUrlOutput.value = generatedUrl;
+            resultTag.textContent = `Short Link Ready ✓ (Valid for ${validityHours}h)`;
+            resultBox.classList.remove('hidden');
+            showToast(`Payment link generated ✓ (Valid for ${validityHours}h)`);
+        });
+
+        // Copy button
+        copyLinkBtn.addEventListener('click', async () => {
+            if (!generatedUrl) return;
+            try {
+                await navigator.clipboard.writeText(generatedUrl);
+                showToast('Link copied to clipboard ✓');
+            } catch (e) {
+                prompt('Copy the link below:', generatedUrl);
+            }
+        });
+
+        // WhatsApp Share button
+        whatsappShareBtn.addEventListener('click', () => {
+            if (!generatedUrl || !generatedData) return;
+            const formattedPrice = formatCurrency(generatedData.price);
+            const vHours = generatedData.validityHours || 24;
+            const vText = `${vHours} hour${vHours > 1 ? 's' : ''}`;
+
+            let text = `Hello! Please click the link below to complete your payment of ${formattedPrice} via UPI:\n\n${generatedUrl}\n\n⏱️ Note: This payment link is valid for ${vText}.\nThank you!`;
+            if (generatedData.item) {
+                text = `Hello! Payment request for "${generatedData.item}" (${formattedPrice}):\n\n${generatedUrl}\n\n⏱️ Note: This payment link is valid for ${vText}.\nThank you!`;
+            }
+            const whatsappUrl = `https://api.whatsapp.com/send/?text=${encodeURIComponent(text)}`;
+            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+        });
+
+        // Preview button
+        previewLinkBtn.addEventListener('click', () => {
+            window.location.href = generatedUrl;
+            checkRoute();
+        });
+
+        // Route handler: Display Payment View, Expired View, or Creator View
+        function checkRoute() {
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+                countdownTimer = null;
+            }
+
+            const data = decodePayment();
+            if (data && data.amount > 0 && data.upiId) {
+                creatorView.classList.add('hidden');
+
+                // Check for 24-hour expiration
+                const isExpired = data.expiresAt && Date.now() > data.expiresAt;
+
+                if (isExpired) {
+                    paymentView.classList.add('hidden');
+                    expiredView.classList.remove('hidden');
+
+                    expiredAmount.textContent = formatCurrency(data.amount);
+                    if (data.item) {
+                        expiredItem.textContent = data.item;
+                        expiredItemWrap.classList.remove('hidden');
+                    } else {
+                        expiredItemWrap.classList.add('hidden');
+                    }
+                    if (data.upiName) {
+                        expiredUpiName.textContent = data.upiName;
+                        expiredUpiNameWrap.classList.remove('hidden');
+                    } else {
+                        expiredUpiNameWrap.classList.add('hidden');
+                    }
+                    if (data.expiresAt) {
+                        const expDate = new Date(data.expiresAt);
+                        expiredDate.textContent = expDate.toLocaleString('en-IN', {
+                            day: 'numeric',
+                            month: 'short',
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                        });
+                        expiredDateWrap.classList.remove('hidden');
+                    } else {
+                        expiredDateWrap.classList.add('hidden');
+                    }
+                    return;
+                }
+
+                // Active valid payment view
+                expiredView.classList.add('hidden');
+                paymentView.classList.remove('hidden');
+
+                // 1. Display Price
+                customerAmount.textContent = formatCurrency(data.amount);
+
+                // 2. Display Expiry / Countdown if present
+                if (data.expiresAt) {
+                    function updateCountdown() {
+                        const msLeft = data.expiresAt - Date.now();
+                        if (msLeft <= 0) {
+                            if (countdownTimer) clearInterval(countdownTimer);
+                            checkRoute();
+                            return;
+                        }
+                        const hoursLeft = Math.floor(msLeft / (1000 * 60 * 60));
+                        const minsLeft = Math.floor((msLeft % (1000 * 60 * 60)) / (1000 * 60));
+                        const timeStr = hoursLeft > 0 ? `${hoursLeft}h ${minsLeft}m` : `${minsLeft}m`;
+                        customerExpiryPill.textContent = `⏱️ Valid for ${timeStr}`;
+                        customerExpiryPill.classList.remove('hidden');
+                    }
+                    updateCountdown();
+                    countdownTimer = setInterval(updateCountdown, 30000);
+                } else {
+                    customerExpiryPill.classList.add('hidden');
+                }
+
+                // 3. Display Item (if present)
+                if (data.item) {
+                    customerItem.textContent = data.item;
+                    customerItemWrap.classList.remove('hidden');
+                } else {
+                    customerItemWrap.classList.add('hidden');
+                }
+
+                // 4. Display Payee Name (if present)
+                if (data.upiName) {
+                    customerUpiName.textContent = data.upiName;
+                    customerUpiNameWrap.classList.remove('hidden');
+                } else {
+                    customerUpiNameWrap.classList.add('hidden');
+                }
+
+                // 5. Display UPI ID
+                customerUpiId.textContent = data.upiId;
+
+                // 6. Build Deep Link with item as tn and upiName as pn
+                upiDeepLinkBtn.href = buildUpiDeepLink(data.amount, data.upiId, data.upiName, data.item);
+            } else {
+                creatorView.classList.remove('hidden');
+                paymentView.classList.add('hidden');
+                expiredView.classList.add('hidden');
+                loadSavedPaymentProfile();
+            }
+        }
+
+        window.addEventListener('hashchange', checkRoute);
+        window.addEventListener('popstate', checkRoute);
+        checkRoute();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Address</title>
+    <style>
+        :root {
+            --bg-page: #f3f4f6;
+            --bg-card: #ffffff;
+            --bg-subtle: #f8fafc;
+            --border-card: #e2e8f0;
+            --border-input: #cbd5e1;
+            --border-hover: #94a3b8;
+            --border-focus: #0f172a;
+
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --text-placeholder: #94a3b8;
+
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 16px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-input);
+            border-radius: 6px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font: inherit;
+            font-size: 14px;
+            outline: none;
+            box-shadow: var(--shadow-sm);
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .form-group input:hover,
+        .form-group select:hover {
+            border-color: var(--border-hover);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-placeholder);
+        }
+
+        /* Single checkbox row */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 18px 0;
+            padding: 12px 14px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-card);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .checkbox-group:hover {
+            background: #f1f5f9;
+            border-color: var(--border-hover);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            appearance: none;
+            -webkit-appearance: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-input);
+            border-radius: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .checkbox-group input[type="checkbox"]:focus-visible {
+            outline: 2px solid var(--border-focus);
+            outline-offset: 2px;
+        }
+
+        .checkbox-group input[type="checkbox"]:checked {
+            background: var(--border-focus);
+            border-color: var(--border-focus);
+        }
+
+        .checkbox-group input[type="checkbox"]:checked::after {
+            content: "✓";
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 500;
+            flex: 1;
+            user-select: none;
+        }
+
+        /* Checkbox collection container */
+        .checkboxes-container {
+            margin: 20px 0;
+            padding: 16px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+        }
+
+        .checkboxes-container .checkbox-group {
+            margin: 0;
+            padding: 10px 0;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--border-card);
+            border-radius: 0;
+        }
+
+        .checkboxes-container .checkbox-group:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .checkboxes-container .checkbox-group:first-child {
+            padding-top: 0;
+        }
+
+        .checkboxes-container .checkbox-group:hover {
+            background: transparent;
+            border-color: var(--border-card);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 22px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 14px;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            font: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--border-focus);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: #0f172a;
+            color: #ffffff;
+            grid-column: 1 / -1;
+        }
+
+        .btn-primary:hover {
+            background: #000000;
+        }
+
+        .btn-primary:active {
+            background: #1e293b;
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-color: var(--border-input);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-subtle);
+            border-color: var(--border-hover);
+        }
+
+        .btn-secondary:active {
+            background: #e2e8f0;
+        }
+
+        .btn-full {
+            grid-column: 1 / -1;
+        }
+
+        .required {
+            color: #dc2626;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%);
+            padding: 10px 18px;
+            background: #0f172a;
+            color: #f8fafc;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 28px 22px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+                align-items: flex-start;
+            }
+
+            .container {
+                padding: 24px 18px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .header p {
+                font-size: 13px;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-primary,
+            .btn-full {
+                grid-column: 1;
+            }
+
+            .checkboxes-container {
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Delivery Address</h1>
+            <p>Enter your delivery address below</p>
+        </div>
+
+        <form id="addressForm">
+            <div class="form-group">
+                <label for="fullName">Name <span class="required">*</span></label>
+                <input type="text" id="fullName" name="fullName" placeholder="Enter your name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number <span class="required">*</span></label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter 10-digit phone number" pattern="[0-9]{10}"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="address1">Address Line 1 <span class="required">*</span></label>
+                <input type="text" id="address1" name="address1"
+                    placeholder="House No., Building/Appartment Name, Floor" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address2">Address Line 2</label>
+                <input type="text" id="address2" name="address2"
+                    placeholder="Road name, Area, Colony/Street (Optional)">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="city">City <span class="required">*</span></label>
+                    <input type="text" id="city" name="city" placeholder="Enter city" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="state">State <span class="required">*</span></label>
+                    <input type="text" id="state" name="state" placeholder="Enter state" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="pincode">PIN Code <span class="required">*</span></label>
+                <input type="text" id="pincode" name="pincode" placeholder="6-digit PIN code" pattern="[0-9]{6}"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="landmark">Landmark</label>
+                <input type="text" id="landmark" name="landmark" placeholder="Near temple, hospital, etc. (Optional)">
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary btn-full">
+                    <span>Send Address (WhatsApp)</span>
+                </button>
+                <button type="button" id="copyToClipboardBtn" class="btn btn-secondary btn-full">
+                    <span>📋 Copy to Clipboard</span>
+                </button>
+                <button type="reset" class="btn btn-secondary">Clear</button>
+                <button type="button" id="clearAutoFillBtn" class="btn btn-secondary">Clear Auto-fill</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="toast" class="toast">Address copied to clipboard!</div>
+
+    <script>
+        const form = document.getElementById('addressForm');
+        const copyToClipboardBtn = document.getElementById('copyToClipboardBtn');
+        const clearAutoFillBtn = document.getElementById('clearAutoFillBtn');
+        const toast = document.getElementById('toast');
+
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+
+        function getFormattedAddressText() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address1 = document.getElementById('address1').value.trim();
+            const address2 = document.getElementById('address2').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const state = document.getElementById('state').value.trim();
+            const pincode = document.getElementById('pincode').value.trim();
+            const landmark = document.getElementById('landmark').value.trim();
+
+            return `To,\n${fullName}\nH.no: ${address1}\n${landmark ? landmark + '\n' : ''}${address2 ? address2 + '\n' : ''}${city}\n${state}\nPin: ${pincode}\nPh.no: ${phone}`;
+        }
+
+        function loadAddressFromCache() {
+            try {
+                const cachedAddress = localStorage.getItem('deliveryAddress');
+                if (cachedAddress) {
+                    const formData = JSON.parse(cachedAddress);
+                    document.getElementById('fullName').value = formData.fullName || '';
+                    document.getElementById('phone').value = formData.phone || '';
+                    document.getElementById('address1').value = formData.address1 || '';
+                    document.getElementById('address2').value = formData.address2 || '';
+                    document.getElementById('city').value = formData.city || '';
+                    document.getElementById('state').value = formData.state || '';
+                    document.getElementById('pincode').value = formData.pincode || '';
+                    document.getElementById('landmark').value = formData.landmark || '';
+                }
+            } catch (err) {
+                console.warn('Error reading address from cache:', err);
+            }
+
+            // Query parameter pre-fill
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryPhone = urlParams.get('phone');
+            if (queryPhone && !document.getElementById('phone').value) {
+                document.getElementById('phone').value = queryPhone.replace(/\D/g, '');
+            }
+            const queryName = urlParams.get('name');
+            if (queryName && !document.getElementById('fullName').value) {
+                document.getElementById('fullName').value = queryName.trim();
+            }
+        }
+
+        function saveAddressToCache() {
+            try {
+                const formData = {
+                    fullName: document.getElementById('fullName').value,
+                    phone: document.getElementById('phone').value,
+                    address1: document.getElementById('address1').value,
+                    address2: document.getElementById('address2').value,
+                    city: document.getElementById('city').value,
+                    state: document.getElementById('state').value,
+                    pincode: document.getElementById('pincode').value,
+                    landmark: document.getElementById('landmark').value
+                };
+                localStorage.setItem('deliveryAddress', JSON.stringify(formData));
+            } catch (err) {
+                console.warn('Error saving address to cache:', err);
+            }
+        }
+
+        form.addEventListener('input', saveAddressToCache);
+
+        // Copy to Clipboard on-click button
+        copyToClipboardBtn.addEventListener('click', async () => {
+            const fullName = document.getElementById('fullName').value.trim();
+            const address1 = document.getElementById('address1').value.trim();
+
+            if (!fullName && !address1) {
+                showToast('Please enter an address first');
+                document.getElementById('fullName').focus();
+                return;
+            }
+
+            saveAddressToCache();
+            const addressText = getFormattedAddressText();
+
+            try {
+                await navigator.clipboard.writeText(addressText);
+                showToast('Address copied to clipboard ✓');
+            } catch (err) {
+                prompt('Copy address below:', addressText);
+            }
+        });
+
+        clearAutoFillBtn.addEventListener('click', () => {
+            try {
+                localStorage.removeItem('deliveryAddress');
+            } catch (e) { }
+            form.reset();
+            showToast('Auto-fill cache cleared ✓');
+        });
+
+        window.addEventListener('load', loadAddressFromCache);
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            saveAddressToCache();
+            const addressText = getFormattedAddressText();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            let recipientPhone = urlParams.get('phone') || '';
+
+            recipientPhone = recipientPhone.replace(/\D/g, '');
+            if (!recipientPhone) {
+                recipientPhone = "";
+            }
+            else if (!recipientPhone.startsWith('91')) {
+                recipientPhone = '91' + recipientPhone;
+            }
+
+            const encodedText = encodeURIComponent(addressText);
+            const whatsappUrl = `https://api.whatsapp.com/send/?phone=${recipientPhone}&text=${encodedText}&type=phone_number&app_absent=0`;
+
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+            }, 300);
+        });
+    </script>
+</body>
+
+</html>

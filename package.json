@@ -1,0 +1,17 @@
+{
+  "name": "reseller-tools",
+  "version": "1.0.0",
+  "description": "Production-ready MERN stack web application for small online resellers",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "start": "node server/index.js",
+    "seed": "node server/src/scripts/seed.js",
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client",
+    "build": "npm run build --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
